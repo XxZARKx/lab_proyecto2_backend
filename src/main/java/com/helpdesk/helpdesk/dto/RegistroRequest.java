@@ -1,9 +1,12 @@
 package com.helpdesk.helpdesk.dto;
 
+import com.helpdesk.helpdesk.model.Rol;
+
 public class RegistroRequest {
     private String nombre;
     private String correo;
     private String contrasena;
+    private Rol rol;
 
     public RegistroRequest() {
     }
@@ -31,4 +34,7 @@ public class RegistroRequest {
     public void setContrasena(String contrasena) {
         this.contrasena = contrasena;
     }
+
+    public Rol getRol() { return rol; }
+    public void setRol(Rol rol) { this.rol = rol; }
 }

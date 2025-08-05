@@ -28,14 +28,17 @@ public class UsuarioService {
             throw new RuntimeException("Ya existe un usuario con ese correo");
         }
 
+        Rol rolAsignado = request.getRol() != null ? request.getRol() : Rol.USUARIO;
+
         Usuario usuario = new Usuario();
         usuario.setNombres(request.getNombre());
         usuario.setCorreo(request.getCorreo());
         usuario.setPassword(passwordEncoder.encode(request.getContrasena()));
-        usuario.setRol(Rol.USUARIO); // Por defecto usuario normal
+        usuario.setRol(rolAsignado);
 
         return usuarioRepository.save(usuario);
     }
+
 
     public Usuario login(LoginRequest request) {
         Optional<Usuario> usuarioOpt = usuarioRepository.findByCorreo(request.getCorreo());
