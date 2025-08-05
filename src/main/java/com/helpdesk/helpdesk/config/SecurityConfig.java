@@ -33,6 +33,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
+                .cors(cors -> {}) // HABILITA CORS para Spring Security
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**", "/swagger-ui.html", "/api-docs/**", "/swagger-ui/**").permitAll()
                         .anyRequest().authenticated()
@@ -41,7 +42,4 @@ public class SecurityConfig {
 
         return http.build();
     }
-
-
-
 }

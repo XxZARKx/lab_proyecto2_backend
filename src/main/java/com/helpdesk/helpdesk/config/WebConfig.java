@@ -14,9 +14,14 @@ public class WebConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("*") // Permite todo para presentación
+                        .allowedOrigins(
+                                "http://localhost:5173",
+                                "https://mi-app-frontend.netlify.app",
+                                "https://mi-app-frontend.vercel.app"
+                        )
                         .allowedMethods("*")
-                        .allowedHeaders("*");
+                        .allowedHeaders("*")
+                        .allowCredentials(true); // habilita cookies y Authorization
             }
         };
     }
