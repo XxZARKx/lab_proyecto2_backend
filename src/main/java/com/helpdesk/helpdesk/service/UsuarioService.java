@@ -58,4 +58,9 @@ public class UsuarioService {
         return usuarioRepository.findAll();
     }
 
+    public List<Usuario> obtenerTecnicos() {
+        return usuarioRepository.findByRol(Rol.TECNICO);
+    }
+
+
 }

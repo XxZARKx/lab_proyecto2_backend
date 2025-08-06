@@ -37,4 +37,12 @@ public class UsuarioController {
         List<Usuario> usuarios = usuarioService.listarUsuarios();
         return ResponseEntity.ok(usuarios);
     }
+
+    @GetMapping("/tecnicos")
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
+    public ResponseEntity<List<Usuario>> obtenerTecnicos() {
+        List<Usuario> tecnicos = usuarioService.obtenerTecnicos();
+        return ResponseEntity.ok(tecnicos);
+    }
+
 }
