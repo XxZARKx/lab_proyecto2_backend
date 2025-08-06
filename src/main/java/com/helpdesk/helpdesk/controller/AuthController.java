@@ -40,6 +40,4 @@ public class AuthController {
         return ResponseEntity.ok("Bearer " + token);
     }
 
-
-
 }
