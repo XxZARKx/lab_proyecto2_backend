@@ -16,8 +16,7 @@ public class WebConfig {
                 registry.addMapping("/**")
                         .allowedOrigins(
                                 "http://localhost:5173",
-                                "https://mi-app-frontend.netlify.app",
-                                "https://mi-app-frontend.vercel.app"
+                                "https://lab-proyecto2.vercel.app/"
                         )
                         .allowedMethods("*")
                         .allowedHeaders("*")
