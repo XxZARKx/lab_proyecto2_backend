@@ -2,6 +2,7 @@ package com.helpdesk.helpdesk.dto;
 
 import com.helpdesk.helpdesk.model.EstadoTicket;
 import com.helpdesk.helpdesk.model.Prioridad;
+import com.helpdesk.helpdesk.model.TipoCategoria;
 
 import java.time.LocalDateTime;
 
@@ -12,29 +13,7 @@ public class TicketResponse {
     private EstadoTicket estado;
     private Prioridad prioridad;
     private LocalDateTime fechaCreacion;
-
-    // Categoría embebida (solo lo que necesitamos en el front)
-    public static class CategoriaDTO {
-        private Long id;
-        private String nombre;
-        private String descripcion;
-
-        public CategoriaDTO() {}
-        public CategoriaDTO(Long id, String nombre, String descripcion) {
-            this.id = id;
-            this.nombre = nombre;
-            this.descripcion = descripcion;
-        }
-
-        public Long getId() { return id; }
-        public void setId(Long id) { this.id = id; }
-        public String getNombre() { return nombre; }
-        public void setNombre(String nombre) { this.nombre = nombre; }
-        public String getDescripcion() { return descripcion; }
-        public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
-    }
-
-    private CategoriaDTO categoria; // <- nuevo
+    private TipoCategoria categoria;
 
     public TicketResponse() {}
 
@@ -57,6 +36,6 @@ public class TicketResponse {
     public LocalDateTime getFechaCreacion() { return fechaCreacion; }
     public void setFechaCreacion(LocalDateTime fechaCreacion) { this.fechaCreacion = fechaCreacion; }
 
-    public CategoriaDTO getCategoria() { return categoria; }
-    public void setCategoria(CategoriaDTO categoria) { this.categoria = categoria; }
+    public TipoCategoria getCategoria() { return categoria; }
+    public void setCategoria(TipoCategoria categoria) { this.categoria = categoria; }
 }

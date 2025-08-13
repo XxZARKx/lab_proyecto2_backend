@@ -1,19 +1,25 @@
 package com.helpdesk.helpdesk.service;
 
 import com.helpdesk.helpdesk.dto.TicketRequest;
-import com.helpdesk.helpdesk.model.*;
-import com.helpdesk.helpdesk.repository.CategoriaRepository;
+import com.helpdesk.helpdesk.model.EstadoTicket;
+import com.helpdesk.helpdesk.model.Prioridad;
+import com.helpdesk.helpdesk.model.RespuestaTicket;
+import com.helpdesk.helpdesk.model.Rol;
+import com.helpdesk.helpdesk.model.Ticket;
+import com.helpdesk.helpdesk.model.Usuario;
 import com.helpdesk.helpdesk.repository.RespuestaTicketRepository;
 import com.helpdesk.helpdesk.repository.TicketRepository;
 import com.helpdesk.helpdesk.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
 public class TicketService {
+
     @Autowired
     private TicketRepository ticketRepository;
 
@@ -26,9 +32,7 @@ public class TicketService {
     @Autowired
     private NotificationService notificationService;
 
-    @Autowired
-    private CategoriaRepository categoriaRepository;
-
+    @Transactional
     public Ticket crearTicket(TicketRequest request, String correoUsuario) {
         Usuario usuario = usuarioRepository.findByCorreo(correoUsuario)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
@@ -44,17 +48,12 @@ public class TicketService {
         ticket.setUsuario(usuario);
         ticket.setFechaCreacion(LocalDateTime.now());
 
-        if (request.getCategoriaId() != null) {
-            Categoria categoria = categoriaRepository.findById(request.getCategoriaId())
-                    .orElseThrow(() -> new RuntimeException("Categoría no encontrada"));
-            ticket.setCategoria(categoria);
-        } else {
-            ticket.setCategoria(null);
-        }
+        ticket.setCategoria(request.getCategoria());
 
         return ticketRepository.save(ticket);
     }
 
+    @Transactional
     public Ticket asignarTicket(Long ticketId, Long tecnicoId) {
         Ticket ticket = ticketRepository.findById(ticketId)
                 .orElseThrow(() -> new RuntimeException("Ticket no encontrado"));
@@ -72,6 +71,7 @@ public class TicketService {
         return ticketRepository.save(ticket);
     }
 
+    @Transactional
     public Ticket actualizarEstado(Long ticketId, EstadoTicket nuevoEstado) {
         Ticket ticket = ticketRepository.findById(ticketId)
                 .orElseThrow(() -> new RuntimeException("Ticket no encontrado"));
@@ -104,7 +104,6 @@ public class TicketService {
                                        Long tecnicoId,
                                        LocalDateTime fechaInicio,
                                        LocalDateTime fechaFin) {
-
         return ticketRepository.filtrarReporte(
                 estado != null ? estado.name() : null,
                 prioridad != null ? prioridad.name() : null,
@@ -114,7 +113,7 @@ public class TicketService {
         );
     }
 
-
+    @Transactional
     public RespuestaTicket responderTicket(Long ticketId, String mensaje, Usuario autor) {
         Ticket ticket = ticketRepository.findById(ticketId)
                 .orElseThrow(() -> new RuntimeException("Ticket no encontrado"));

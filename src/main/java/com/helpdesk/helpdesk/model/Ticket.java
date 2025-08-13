@@ -24,9 +24,9 @@ public class Ticket {
     @Enumerated(EnumType.STRING)
     private Prioridad prioridad;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "categoria_id")
-    private Categoria categoria;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "categoria", length = 30)
+    private TipoCategoria categoria;
 
     @ManyToOne
     @JoinColumn(name = "usuario_id")
@@ -73,9 +73,8 @@ public class Ticket {
 
     public void setPrioridad(Prioridad prioridad) { this.prioridad = prioridad; }
 
-    public Categoria getCategoria() { return categoria; }
-
-    public void setCategoria(Categoria categoria) { this.categoria = categoria; }
+    public TipoCategoria getCategoria() { return categoria; }
+    public void setCategoria(TipoCategoria categoria) { this.categoria = categoria; }
 
     public Usuario getUsuario() { return usuario; }
 

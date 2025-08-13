@@ -1,6 +1,5 @@
 package com.helpdesk.helpdesk.controller;
 
-
 import com.helpdesk.helpdesk.dto.RespuestaRequest;
 import com.helpdesk.helpdesk.dto.TicketRequest;
 import com.helpdesk.helpdesk.dto.TicketResponse;
@@ -8,6 +7,7 @@ import com.helpdesk.helpdesk.model.EstadoTicket;
 import com.helpdesk.helpdesk.model.Prioridad;
 import com.helpdesk.helpdesk.model.RespuestaTicket;
 import com.helpdesk.helpdesk.model.Ticket;
+import com.helpdesk.helpdesk.model.TipoCategoria;
 import com.helpdesk.helpdesk.security.UsuarioDetails;
 import com.helpdesk.helpdesk.service.TicketService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,11 +19,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/tickets")
 public class TicketController {
+
     @Autowired
     private TicketService ticketService;
 
@@ -75,19 +75,16 @@ public class TicketController {
             @RequestParam(required = false)
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
             LocalDateTime fechaFin,
-            @RequestParam(required = false) Long categoriaId // <-- nuevo filtro opcional
+            @RequestParam(required = false) TipoCategoria categoria
     ) {
-        // 1) Trae el reporte como siempre
         List<Ticket> reporte = ticketService.generarReporte(estado, prioridad, tecnicoId, fechaInicio, fechaFin);
 
-        // 2) Filtro opcional por categoría en el controller (rápido)
-        if (categoriaId != null) {
+        if (categoria != null) {
             reporte = reporte.stream()
-                    .filter(t -> t.getCategoria() != null && categoriaId.equals(t.getCategoria().getId()))
-                    .collect(Collectors.toList());
+                    .filter(t -> categoria.equals(t.getCategoria()))
+                    .toList();
         }
 
-        // 3) Mapea a TicketResponse (incluyendo categoría)
         List<TicketResponse> body = reporte.stream().map(t -> {
             TicketResponse r = new TicketResponse();
             r.setId(t.getId());
@@ -96,20 +93,12 @@ public class TicketController {
             r.setEstado(t.getEstado());
             r.setPrioridad(t.getPrioridad());
             r.setFechaCreacion(t.getFechaCreacion());
-
-            if (t.getCategoria() != null) {
-                r.setCategoria(new TicketResponse.CategoriaDTO(
-                        t.getCategoria().getId(),
-                        t.getCategoria().getNombre(),
-                        t.getCategoria().getDescripcion()
-                ));
-            }
+            r.setCategoria(t.getCategoria());
             return r;
-        }).collect(Collectors.toList());
+        }).toList();
 
         return ResponseEntity.ok(body);
     }
-
 
     @PostMapping("/responder")
     @PreAuthorize("hasAnyRole('TECNICO', 'USUARIO')")
@@ -122,5 +111,4 @@ public class TicketController {
         );
         return ResponseEntity.ok(respuesta);
     }
-
 }
