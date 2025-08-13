@@ -68,7 +68,11 @@ public class TicketService {
         ticket.setTecnico(tecnico);
         ticket.setEstado(EstadoTicket.ASIGNADO);
 
-        return ticketRepository.save(ticket);
+        Ticket saved = ticketRepository.save(ticket);
+
+        notificationService.registrarNotificacionTicketAsignado(saved);
+
+        return saved;
     }
 
     @Transactional
@@ -77,15 +81,20 @@ public class TicketService {
                 .orElseThrow(() -> new RuntimeException("Ticket no encontrado"));
 
         ticket.setEstado(nuevoEstado);
+
         Ticket actualizado = ticketRepository.save(ticket);
+
         notificationService.notificarCambioEstado(actualizado);
+
         return actualizado;
     }
 
+    @Transactional(readOnly = true)
     public List<Ticket> listarTicketsPendientes() {
         return ticketRepository.findByEstado(EstadoTicket.PENDIENTE);
     }
 
+    @Transactional(readOnly = true)
     public List<Ticket> consultarHistorial(Usuario usuario) {
         switch (usuario.getRol()) {
             case USUARIO:
@@ -99,6 +108,7 @@ public class TicketService {
         }
     }
 
+    @Transactional(readOnly = true)
     public List<Ticket> generarReporte(EstadoTicket estado,
                                        Prioridad prioridad,
                                        Long tecnicoId,
@@ -124,6 +134,10 @@ public class TicketService {
         respuesta.setMensaje(mensaje);
         respuesta.setFechaRespuesta(LocalDateTime.now());
 
-        return respuestaRepository.save(respuesta);
+        RespuestaTicket saved = respuestaRepository.save(respuesta);
+
+        notificationService.registrarNotificacionRespuesta(saved); // <-- añadido
+
+        return saved;
     }
 }
