@@ -10,7 +10,6 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                // sin slash final; y wildcard para previews de Vercel
                 .allowedOriginPatterns(
                         "http://localhost:5173",
                         "https://lab-proyecto2.vercel.app",
