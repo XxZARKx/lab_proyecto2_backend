@@ -43,7 +43,6 @@ public class TicketController {
     }
 
     @PutMapping("/{id}/estado")
-    @PreAuthorize("hasRole('TECNICO')")
     public ResponseEntity<?> actualizarEstado(@PathVariable Long id,
                                               @RequestParam EstadoTicket estado) {
         Ticket ticket = ticketService.actualizarEstado(id, estado);
