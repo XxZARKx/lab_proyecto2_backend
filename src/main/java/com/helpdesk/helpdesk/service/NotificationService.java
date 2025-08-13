@@ -61,17 +61,27 @@ public class NotificationService {
     @Transactional
     public void registrarNotificacionRespuesta(RespuestaTicket respuesta) {
         Ticket ticket = respuesta.getTicket();
-        if (ticket == null || ticket.getUsuario() == null) return;
+        if (ticket == null) return;
 
-        String asunto = "Nueva respuesta en tu ticket #" + ticket.getId();
-        String mensaje = "Hola " + ticket.getUsuario().getNombres() + ",\n\n"
-                + "Tu ticket \"" + ticket.getTitulo() + "\" tiene una nueva respuesta.\n\n"
+        Usuario autor = respuesta.getAutor();
+        Usuario destinatario;
+        if (autor.getId().equals(ticket.getUsuario().getId())) {
+            destinatario = ticket.getTecnico();
+        } else {
+            destinatario = ticket.getUsuario();
+        }
+        if (destinatario == null) return;
+
+        String asunto = "Nueva respuesta en el ticket #" + ticket.getId();
+        String mensaje = "Hola " + destinatario.getNombres() + ",\n\n"
+                + "Hay un nuevo mensaje en el ticket \"" + ticket.getTitulo() + "\".\n\n"
+                + "Mensaje:\n" + respuesta.getMensaje() + "\n\n"
                 + "Saludos,\nEquipo de Soporte Helpdesk";
-        enviarCorreo(ticket.getUsuario().getCorreo(), asunto, mensaje);
+        enviarCorreo(destinatario.getCorreo(), asunto, mensaje);
 
-        guardarNotificacion(ticket.getUsuario(),
+        guardarNotificacion(destinatario,
                 "Nueva respuesta en tu ticket",
-                "Tu ticket #" + ticket.getId() + " tiene una nueva respuesta.",
+                "Ticket #" + ticket.getId() + ": " + respuesta.getMensaje(),
                 TipoNotificacion.TICKET_RESPUESTA,
                 ticket.getId());
     }

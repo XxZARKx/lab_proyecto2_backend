@@ -1,6 +1,7 @@
 package com.helpdesk.helpdesk.controller;
 
 import com.helpdesk.helpdesk.dto.RespuestaRequest;
+import com.helpdesk.helpdesk.dto.RespuestaResponse;
 import com.helpdesk.helpdesk.dto.TicketRequest;
 import com.helpdesk.helpdesk.dto.TicketResponse;
 import com.helpdesk.helpdesk.model.EstadoTicket;
@@ -8,6 +9,7 @@ import com.helpdesk.helpdesk.model.Prioridad;
 import com.helpdesk.helpdesk.model.RespuestaTicket;
 import com.helpdesk.helpdesk.model.Ticket;
 import com.helpdesk.helpdesk.model.TipoCategoria;
+import com.helpdesk.helpdesk.repository.RespuestaTicketRepository;
 import com.helpdesk.helpdesk.security.UsuarioDetails;
 import com.helpdesk.helpdesk.service.TicketService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,9 @@ public class TicketController {
 
     @Autowired
     private TicketService ticketService;
+
+    @Autowired
+    private RespuestaTicketRepository respuestaTicketRepository;
 
     @PostMapping
     public ResponseEntity<?> crearTicket(@RequestBody TicketRequest request,
@@ -47,6 +52,24 @@ public class TicketController {
                                               @RequestParam EstadoTicket estado) {
         Ticket ticket = ticketService.actualizarEstado(id, estado);
         return ResponseEntity.ok(ticket);
+    }
+
+    @GetMapping("/{id}/respuestas")
+    @PreAuthorize("hasAnyRole('USUARIO', 'TECNICO', 'ADMINISTRADOR')")
+    public ResponseEntity<List<RespuestaResponse>> listarRespuestas(@PathVariable Long id) {
+        var list = respuestaTicketRepository.findByTicketIdOrderByFechaRespuestaAsc(id)
+                .stream()
+                .map(r -> {
+                    RespuestaResponse dto = new RespuestaResponse();
+                    dto.setId(r.getId());
+                    dto.setMensaje(r.getMensaje());
+                    dto.setFecha(r.getFechaRespuesta());
+                    dto.setAutorNombre(r.getAutor().getNombres());
+                    dto.setAutorRol(r.getAutor().getRol().name());
+                    return dto;
+                })
+                .toList();
+        return ResponseEntity.ok(list);
     }
 
     @GetMapping("/pendientes")
