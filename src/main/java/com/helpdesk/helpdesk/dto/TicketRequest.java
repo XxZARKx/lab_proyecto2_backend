@@ -6,6 +6,7 @@ public class TicketRequest {
     private String titulo;
     private String descripcion;
     private Prioridad prioridad;
+    private Long categoriaId;
 
     public String getTitulo() { return titulo; }
     public void setTitulo(String titulo) { this.titulo = titulo; }
@@ -15,4 +16,7 @@ public class TicketRequest {
 
     public Prioridad getPrioridad() { return prioridad; }
     public void setPrioridad(Prioridad prioridad) { this.prioridad = prioridad; }
+
+    public Long getCategoriaId() { return categoriaId; }
+    public void setCategoriaId(Long categoriaId) { this.categoriaId = categoriaId; }
 }
