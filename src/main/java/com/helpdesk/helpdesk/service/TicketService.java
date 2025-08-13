@@ -2,6 +2,7 @@ package com.helpdesk.helpdesk.service;
 
 import com.helpdesk.helpdesk.dto.TicketRequest;
 import com.helpdesk.helpdesk.model.*;
+import com.helpdesk.helpdesk.repository.CategoriaRepository;
 import com.helpdesk.helpdesk.repository.RespuestaTicketRepository;
 import com.helpdesk.helpdesk.repository.TicketRepository;
 import com.helpdesk.helpdesk.repository.UsuarioRepository;
@@ -25,6 +26,9 @@ public class TicketService {
     @Autowired
     private NotificationService notificationService;
 
+    @Autowired
+    private CategoriaRepository categoriaRepository;
+
     public Ticket crearTicket(TicketRequest request, String correoUsuario) {
         Usuario usuario = usuarioRepository.findByCorreo(correoUsuario)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
@@ -32,10 +36,21 @@ public class TicketService {
         Ticket ticket = new Ticket();
         ticket.setTitulo(request.getTitulo());
         ticket.setDescripcion(request.getDescripcion());
-        ticket.setPrioridad(request.getPrioridad());
+
+        Prioridad prioridad = request.getPrioridad() != null ? request.getPrioridad() : Prioridad.MEDIA;
+        ticket.setPrioridad(prioridad);
+
         ticket.setEstado(EstadoTicket.PENDIENTE);
         ticket.setUsuario(usuario);
         ticket.setFechaCreacion(LocalDateTime.now());
+
+        if (request.getCategoriaId() != null) {
+            Categoria categoria = categoriaRepository.findById(request.getCategoriaId())
+                    .orElseThrow(() -> new RuntimeException("Categoría no encontrada"));
+            ticket.setCategoria(categoria);
+        } else {
+            ticket.setCategoria(null);
+        }
 
         return ticketRepository.save(ticket);
     }
