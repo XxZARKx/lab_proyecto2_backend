@@ -136,7 +136,7 @@ public class TicketService {
 
         RespuestaTicket saved = respuestaRepository.save(respuesta);
 
-        notificationService.registrarNotificacionRespuesta(saved); // <-- añadido
+        notificationService.registrarNotificacionRespuesta(saved);
 
         return saved;
     }

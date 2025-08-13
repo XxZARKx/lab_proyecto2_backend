@@ -9,7 +9,6 @@ public class RespuestaResponse {
     private String mensaje;
     private LocalDateTime fecha;
 
-    // getters & setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public String getAutorNombre() { return autorNombre; }

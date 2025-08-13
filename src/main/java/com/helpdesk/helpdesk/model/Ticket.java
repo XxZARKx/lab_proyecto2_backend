@@ -30,15 +30,14 @@ public class Ticket {
 
     @ManyToOne
     @JoinColumn(name = "usuario_id")
-    private Usuario usuario; // quien crea el ticket
+    private Usuario usuario;
 
     @ManyToOne
     @JoinColumn(name = "tecnico_id")
-    private Usuario tecnico; // técnico asignado
+    private Usuario tecnico;
 
     private LocalDateTime fechaCreacion;
 
-    // CONSTRUCTORES
     public Ticket() {}
 
     public Ticket(String titulo, String descripcion, EstadoTicket estado, Prioridad prioridad,
@@ -52,7 +51,6 @@ public class Ticket {
         this.fechaCreacion = fechaCreacion;
     }
 
-    // GETTERS y SETTERS
     public Long getId() { return id; }
 
     public void setId(Long id) { this.id = id; }

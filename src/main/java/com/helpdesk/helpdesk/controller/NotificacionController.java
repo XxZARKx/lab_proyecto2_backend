@@ -35,7 +35,6 @@ public class NotificacionController {
                 ? repo.findByUsuarioIdAndLeidaEnIsNullOrderByCreadoEnDesc(uid, PageRequest.of(page, size))
                 : repo.findByUsuarioIdOrderByCreadoEnDesc(uid, PageRequest.of(page, size));
 
-        // map a DTO y marca leída en base a leidaEn != null
         Page<NotificacionResponse> body = p.map(n -> {
             NotificacionResponse r = new NotificacionResponse();
             r.setId(n.getId());
@@ -44,7 +43,7 @@ public class NotificacionController {
             r.setTipo(n.getTipo());
             r.setTicketId(n.getTicketId());
             r.setCreadoEn(n.getCreadoEn());
-            r.setLeida(n.getLeidaEn() != null); // <-- ojo aquí
+            r.setLeida(n.getLeidaEn() != null);
             return r;
         });
 
@@ -77,7 +76,7 @@ public class NotificacionController {
     @Transactional
     public ResponseEntity<Void> marcarTodasLeidas(@AuthenticationPrincipal UsuarioDetails userDetails) {
         Long uid = userDetails.getUsuario().getId();
-        repo.marcarTodasComoLeidas(uid); // Bulk update, sin traer toda la lista
+        repo.marcarTodasComoLeidas(uid);
         return ResponseEntity.ok().build();
     }
 }

@@ -13,7 +13,6 @@ public class NotificacionResponse {
     private LocalDateTime creadoEn;
     private boolean leida;
 
-    // getters & setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public String getTitulo() { return titulo; }

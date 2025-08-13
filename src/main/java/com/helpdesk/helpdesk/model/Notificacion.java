@@ -12,7 +12,6 @@ public class Notificacion {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Usuario destinatario de la notificación
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "usuario_id")
     private Usuario usuario;
@@ -27,23 +26,18 @@ public class Notificacion {
     @Column(nullable = false)
     private TipoNotificacion tipo;
 
-    // Para enlazar con un ticket concreto en el frontend
     @Column(name = "ticket_id")
     private Long ticketId;
 
     @Column(nullable = false)
     private LocalDateTime creadoEn;
 
-    // null = no leída
     private LocalDateTime leidaEn;
-
-    /* Getters/Setters */
 
     public boolean isLeida() {
         return leidaEn != null;
     }
 
-    // getters y setters omitidos por brevedad
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
