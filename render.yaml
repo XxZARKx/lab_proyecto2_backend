@@ -6,14 +6,15 @@ services:
     startCommand: "java -jar target/*.jar"
     envVars:
       - key: SPRING_DATASOURCE_URL
-        value: jdbc:postgresql://tramway.proxy.rlwy.net:58938/railway
+        value: jdbc:postgresql://aws-0-us-west-2.pooler.supabase.com:6543/postgres?sslmode=require&prepareThreshold=0
       - key: SPRING_DATASOURCE_USERNAME
-        value: postgres
+        value: postgres.usrlakuvxtpmbdurtauy
       - key: SPRING_DATASOURCE_PASSWORD
-        value: MpALVlLKtCnDESRVSRKRuyiNydBqaEjx
+        value: RODRIGOfranco1301
+      # Asegúrate de incluir las demás variables si Render no las tiene guardadas en el dashboard
       - key: JWT_SECRET
         value: qdU9wDzghVCmw4ma8N812fzbSprSsz1ViEgCUW80FV
       - key: SPRING_MAIL_USERNAME
-        value: xxzarkxv@gmail.com
+        value: rodrigofranco.1301@gmail.com
       - key: SPRING_MAIL_PASSWORD
-        value: haaodifxarhaaixq
+        value: rsaekqartyiakohy
