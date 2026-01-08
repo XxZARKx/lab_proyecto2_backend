@@ -9,6 +9,7 @@ import com.helpdesk.helpdesk.repository.NotificacionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +24,7 @@ public class NotificationService {
     @Autowired
     private NotificacionRepository notificacionRepository;
 
+    @Async
     @Transactional
     public void notificarCambioEstado(Ticket ticket) {
         Usuario usuario = ticket.getUsuario();
@@ -41,6 +43,7 @@ public class NotificationService {
                 ticket.getId());
     }
 
+    @Async
     @Transactional
     public void registrarNotificacionTicketAsignado(Ticket ticket) {
         if (ticket.getUsuario() == null) return;
@@ -58,6 +61,7 @@ public class NotificationService {
                 ticket.getId());
     }
 
+    @Async
     @Transactional
     public void registrarNotificacionRespuesta(RespuestaTicket respuesta) {
         Ticket ticket = respuesta.getTicket();
