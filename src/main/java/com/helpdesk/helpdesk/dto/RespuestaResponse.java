@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 public class RespuestaResponse {
     private Long id;
     private String autorNombre;
+    private Long autorId;
     private String autorRol;
     private String mensaje;
     private LocalDateTime fecha;
@@ -13,6 +14,8 @@ public class RespuestaResponse {
     public void setId(Long id) { this.id = id; }
     public String getAutorNombre() { return autorNombre; }
     public void setAutorNombre(String autorNombre) { this.autorNombre = autorNombre; }
+    public Long getAutorId() { return autorId; }
+    public void setAutorId(Long autorId) { this.autorId = autorId; }
     public String getAutorRol() { return autorRol; }
     public void setAutorRol(String autorRol) { this.autorRol = autorRol; }
     public String getMensaje() { return mensaje; }

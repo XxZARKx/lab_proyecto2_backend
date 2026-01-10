@@ -65,6 +65,7 @@ public class TicketController {
                     dto.setMensaje(r.getMensaje());
                     dto.setFecha(r.getFechaRespuesta());
                     dto.setAutorNombre(r.getAutor().getNombres());
+                    dto.setAutorId(r.getAutor().getId());
                     dto.setAutorRol(r.getAutor().getRol().name());
                     return dto;
                 })
