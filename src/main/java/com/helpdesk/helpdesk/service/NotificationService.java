@@ -91,15 +91,10 @@ public class NotificationService {
     }
 
     private void enviarCorreo(String para, String asunto, String cuerpo) {
-        try {
-            SimpleMailMessage email = new SimpleMailMessage();
-            email.setTo(para);
-            email.setSubject(asunto);
-            email.setText(cuerpo);
-            mailSender.send(email);
-        } catch (Exception ex) {
-            System.err.println("No se pudo enviar correo: " + ex.getMessage());
-        }
+        System.out.println(">>> SIMULACIÓN DE CORREO <<<");
+        System.out.println("Para: " + para);
+        System.out.println("Asunto: " + asunto);
+        System.out.println("--------------------------------");
     }
 
     private void guardarNotificacion(Usuario destinatario,
