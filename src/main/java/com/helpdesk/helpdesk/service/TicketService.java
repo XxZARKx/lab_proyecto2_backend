@@ -43,14 +43,49 @@ public class TicketService {
 
         Prioridad prioridad = request.getPrioridad() != null ? request.getPrioridad() : Prioridad.MEDIA;
         ticket.setPrioridad(prioridad);
-
-        ticket.setEstado(EstadoTicket.PENDIENTE);
+        ticket.setCategoria(request.getCategoria());
         ticket.setUsuario(usuario);
         ticket.setFechaCreacion(LocalDateTime.now());
 
-        ticket.setCategoria(request.getCategoria());
+        Usuario tecnicoSeleccionado = seleccionarTecnicoDisponible();
 
-        return ticketRepository.save(ticket);
+        if (tecnicoSeleccionado != null) {
+            ticket.setTecnico(tecnicoSeleccionado);
+            ticket.setEstado(EstadoTicket.ASIGNADO);
+        } else {
+            ticket.setEstado(EstadoTicket.PENDIENTE);
+        }
+
+        Ticket savedTicket = ticketRepository.save(ticket);
+
+        if (tecnicoSeleccionado != null) {
+            notificationService.notificarTecnicoNuevaAsignacion(savedTicket);
+            notificationService.registrarNotificacionTicketAsignado(savedTicket);
+        }
+
+        return savedTicket;
+    }
+
+    private Usuario seleccionarTecnicoDisponible() {
+        List<Usuario> tecnicos = usuarioRepository.findByRol(Rol.TECNICO);
+
+        if (tecnicos.isEmpty()) {
+            return null;
+        }
+
+        Usuario mejorCandidato = null;
+        long menorCarga = Long.MAX_VALUE;
+
+        for (Usuario tech : tecnicos) {
+            long cargaActual = ticketRepository.countTicketsActivosPorTecnico(tech.getId());
+
+            if (cargaActual < menorCarga) {
+                menorCarga = cargaActual;
+                mejorCandidato = tech;
+            }
+        }
+
+        return mejorCandidato;
     }
 
     @Transactional

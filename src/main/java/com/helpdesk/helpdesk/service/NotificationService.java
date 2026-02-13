@@ -111,4 +111,29 @@ public class NotificationService {
         n.setCreadoEn(LocalDateTime.now());
         notificacionRepository.save(n);
     }
+
+
+    @Async
+    @Transactional
+    public void notificarTecnicoNuevaAsignacion(Ticket ticket) {
+        if (ticket.getTecnico() == null) return;
+
+        Usuario tecnico = ticket.getTecnico();
+
+        String asunto = "Nuevo ticket asignado: #" + ticket.getId();
+        String mensaje = "Hola " + tecnico.getNombres() + ",\n\n"
+                + "Se te ha asignado automáticamente un nuevo ticket.\n"
+                + "Título: " + ticket.getTitulo() + "\n"
+                + "Prioridad: " + ticket.getPrioridad() + "\n\n"
+                + "Por favor revisa tu bandeja de entrada en la plataforma.\n\n"
+                + "Saludos,\nSistema Helpdesk";
+
+        enviarCorreo(tecnico.getCorreo(), asunto, mensaje);
+
+        guardarNotificacion(tecnico,
+                "Nuevo ticket asignado",
+                "Tienes un nuevo ticket asignado: #" + ticket.getId(),
+                TipoNotificacion.TICKET_ASIGNADO,
+                ticket.getId());
+    }
 }

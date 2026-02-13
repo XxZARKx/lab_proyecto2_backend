@@ -38,4 +38,7 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
             @Param("fechaFin") String fechaFin
     );
 
+    @Query("SELECT COUNT(t) FROM Ticket t WHERE t.tecnico.id = :tecnicoId AND t.estado IN ('ASIGNADO', 'EN_PROCESO')")
+    long countTicketsActivosPorTecnico(@Param("tecnicoId") Long tecnicoId);
+
 }
